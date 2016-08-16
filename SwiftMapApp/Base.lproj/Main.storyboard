@@ -13,59 +13,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="MV4-fU-xJQ">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem systemItem="trash" id="zae-lU-UZ6">
-                                        <connections>
-                                            <action selector="clearMarker:" destination="BYZ-38-t0r" id="Lhd-LG-jjE"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="I7N-pj-qiI"/>
-                                    <barButtonItem title="保存した場所をみる" id="phw-dP-B7v">
-                                        <connections>
-                                            <action selector="getLocationData:" destination="BYZ-38-t0r" id="F2U-pt-N50"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Fxh-9n-ygS"/>
-                                    <barButtonItem image="shop_icon" id="YBF-ar-qPz">
-                                        <connections>
-                                            <action selector="showShops:" destination="BYZ-38-t0r" id="zyA-M3-kiF"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="nifty" id="hUs-r4-8Ew">
-                                        <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="showNifty:" destination="BYZ-38-t0r" id="SKo-1w-IYu"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <navigationBar contentMode="scaleToFill" id="nMP-co-WoL">
                                 <rect key="frame" x="0.0" y="16" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="SwiftMapApp" id="NNh-UA-ucS">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" id="VPn-fE-Kmb">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="SNG-66-cJz">
-                                                <rect key="frame" x="16" y="9" width="59" height="25"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="location">
-                                                    <attributedString key="attributedTitle">
-                                                        <fragment content="取得">
-                                                            <attributes>
-                                                                <color key="NSColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <font key="NSFont" size="14" name="HiraKakuProN-W3"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                </state>
-                                                <connections>
-                                                    <action selector="getLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iXa-oE-Pgx"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" style="plain" id="phb-hH-rUr">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="Zns-TE-ibd">
                                                 <rect key="frame" x="244" y="9" width="60" height="25"/>
@@ -113,14 +65,14 @@
                                         <rect key="frame" x="162" y="10" width="34" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="緯度" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LF4-8w-Reh">
                                         <rect key="frame" x="15" y="10" width="34" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -134,12 +86,41 @@
                                         <rect key="frame" x="8" y="5" width="304" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="MV4-fU-xJQ">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem systemItem="trash" id="zae-lU-UZ6">
+                                        <connections>
+                                            <action selector="clearMarker:" destination="BYZ-38-t0r" id="Lhd-LG-jjE"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="I7N-pj-qiI"/>
+                                    <barButtonItem title="保存した場所をみる" id="phw-dP-B7v">
+                                        <connections>
+                                            <action selector="getLocationData:" destination="BYZ-38-t0r" id="dM1-VJ-wn3"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Fxh-9n-ygS"/>
+                                    <barButtonItem image="shop_icon" id="YBF-ar-qPz">
+                                        <connections>
+                                            <action selector="showShops:" destination="BYZ-38-t0r" id="zyA-M3-kiF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="nifty" id="hUs-r4-8Ew">
+                                        <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="showNifty:" destination="BYZ-38-t0r" id="SKo-1w-IYu"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="0.96078431369999995" green="0.96078431369999995" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -156,7 +137,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="location" width="25" height="25"/>
         <image name="shop_icon" width="25" height="25"/>
         <image name="upload" width="25" height="25"/>
     </resources>

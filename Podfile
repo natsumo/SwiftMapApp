@@ -7,3 +7,4 @@ target 'SwiftMapApp' do
     pod 'NCMB', :git => 'https://github.com/NIFTYCloud-mbaas/ncmb_ios.git'
     pod 'GoogleMaps'
 end
+

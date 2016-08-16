@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  SwiftMapApp
 //
-//  Created by 大森太郎 on 2016/08/10.
+//  Created by Natsumo Ikeda on 2016/08/10.
 //  Copyright © 2016年 NIFTY Corporation. All rights reserved.
 //
 
@@ -29,14 +29,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 新宿駅の位置情報
     let SHINJUKU_LAT = 35.690549
     let SHINJUKU_LON = 139.699550
+    // 西新宿駅の位置情報
+    let WEST_SHINJUKU_LAT = 35.6945080
+    let WEST_SHINJUKU_LON = 139.692692
     // ニフティの位置情報
     let NIFTY_LAT = 35.696144
     let NIFTY_LON = 139.689485
     // ズームレベル
     let ZOOM: Float = 14.5
+    // 検索範囲
+    let SEAECH_RANGE = ["全件検索", "現在地から半径5km以内を検索", "現在地から半径1km以内を検索", "現在地から新宿駅と西新宿駅の間を検索"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 位置情報取得開始
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.startUpdatingLocation()
+        }
         
         // 起動時は新宿駅に設定
         showMap(SHINJUKU_LAT, longitude: SHINJUKU_LON)
@@ -49,16 +61,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // 位置情報取得の停止
         if CLLocationManager.locationServicesEnabled() {
             locationManager.stopUpdatingLocation()
-        }
-    }
-    
-    // 「取得」ボタン押下時の処理
-    @IBAction func getLocation(sender: UIButton) {
-        // 位置情報取得開始
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.startUpdatingLocation()
         }
     }
     
@@ -119,7 +121,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 // NCMBObjectを生成
                 let object = NCMBObject(className: "GeoPoint")
                 // 値を設定
-                object.setObject(geoPoint, forKey: "geoPoint")
+                object.setObject(geoPoint, forKey: "geolocation")
                 object.setObject(title, forKey: "title")
                 object.setObject(snippet, forKey: "snippet")
                 // 保存の実施
@@ -140,6 +142,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             })
             // アラートのキャンセル押下時の処理
             alert.addAction(UIAlertAction(title: "キャンセル", style: .Default) { (action: UIAlertAction!) -> Void in
+                self.label.text = "保存がキャンセルされました"
                 print("保存がキャンセルされました")
             })
             presentViewController(alert, animated: true, completion: nil)
@@ -148,11 +151,89 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     // 「保存した場所を見る」ボタン押下時の処理
     @IBAction func getLocationData(sender: UIBarButtonItem) {
-        /** 【mBaaS：データストア(位置情報)】「GeoPoint」クラスのデータを取得 **/
-        // 「geoPoint」クラスの検索クエリを作成
-        let query = NCMBQuery(className: "GeoPoint")
+        // Action Sheet
+        let actionSheet = UIAlertController(title: "保存した場所を地図に表示します", message: "検索範囲を選択してください", preferredStyle: .ActionSheet)
+        // iPadの場合
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            print("iPad使用")
+            actionSheet.popoverPresentationController!.sourceView = self.view;
+            actionSheet.popoverPresentationController!.sourceRect = CGRectMake(self.view.bounds.size.width*0.5, self.view.bounds.size.height*0.9, 1.0, 1.0);
+            actionSheet.popoverPresentationController!.permittedArrowDirections = UIPopoverArrowDirection.Down
+        }
+        
+        // キャンセル
+        let cancel = UIAlertAction(title: "キャンセル", style: .Cancel) { (action: UIAlertAction!) -> Void in
+        }
+        // 全件検索
+        let allSearch = UIAlertAction(title: SEAECH_RANGE[0], style: .Default) { (action: UIAlertAction!) -> Void in
+            self.getLocaion(action.title!)
+        }
+        // 円形検索(半径5km以内)
+        let round5km = UIAlertAction(title: SEAECH_RANGE[1], style: .Default) { (action: UIAlertAction) -> Void in
+            self.getLocaion(action.title!)
+        }
+        // 円形検索(半径1km以内)
+        let round1km = UIAlertAction(title: SEAECH_RANGE[2], style: .Default) { (action: UIAlertAction) -> Void in
+            self.getLocaion(action.title!)
+        }
+        // 矩形検索
+        let rectangle = UIAlertAction(title: SEAECH_RANGE[3], style: .Default) { (action: UIAlertAction) -> Void in
+            self.getLocaion(action.title!)
+        }
+        
+        // 設定
+        actionSheet.addAction(cancel)
+        actionSheet.addAction(allSearch)
+        actionSheet.addAction(round5km)
+        actionSheet.addAction(round1km)
+        actionSheet.addAction(rectangle)
+        // アラートを表示する
+        presentViewController(actionSheet, animated: true, completion: nil)
+        
+    }
+    
+    /** 【mBaaS：データストア(位置情報)】「GeoPoint」クラスのデータを取得 **/
+    func getLocaion(title: String) {
+        // チェック
+        if myLocation == nil {
+            return
+        }
+        
+        // 現在地
+        let geoPoint = NCMBGeoPoint(latitude: myLocation.coordinate.latitude, longitude: myLocation.coordinate.longitude)
+        // 新宿駅
+        let shinjukuGeoPoint = NCMBGeoPoint(latitude: SHINJUKU_LAT, longitude: SHINJUKU_LON)
+        // 西新宿駅
+        let westShinjukuGeoPoint = NCMBGeoPoint(latitude: WEST_SHINJUKU_LAT, longitude: WEST_SHINJUKU_LON)
+        // それぞれのクラスの検索クエリを作成
+        let queryGeoPoint = NCMBQuery(className: "GeoPoint")
+        let queryShop = NCMBQuery(className: "Shop")
+        // 検索条件を設定
+        switch title {
+        case SEAECH_RANGE[0]:
+            print(SEAECH_RANGE[0])
+            break
+        case SEAECH_RANGE[1]:
+            print(SEAECH_RANGE[1])
+            // 半径5km以内(円形検索)
+            queryGeoPoint.whereKey("geolocation", nearGeoPoint: geoPoint, withinKilometers: 5.0)
+            queryShop.whereKey("geolocation", nearGeoPoint: geoPoint, withinKilometers: 5.0)
+        case SEAECH_RANGE[2]:
+            print(SEAECH_RANGE[2])
+            // 半径1km以内(円形検索)
+            queryGeoPoint.whereKey("geolocation", nearGeoPoint: geoPoint, withinKilometers: 1.0)
+            queryShop.whereKey("geolocation", nearGeoPoint: geoPoint, withinKilometers: 1.0)
+        case SEAECH_RANGE[3]:
+            print(SEAECH_RANGE[3])
+            // 新宿駅と西新宿駅の間(矩形検索)
+            queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: shinjukuGeoPoint, toNortheast: westShinjukuGeoPoint)
+            queryShop.whereKey("geolocation", withinGeoBoxFromSouthwest: shinjukuGeoPoint, toNortheast: westShinjukuGeoPoint)
+        default:
+            print("\(SEAECH_RANGE[0])(エラー)")
+            break
+        }
         // データストアを検索
-        query.findObjectsInBackgroundWithBlock({ (objects: Array!, error: NSError!) -> Void in
+        queryGeoPoint.findObjectsInBackgroundWithBlock({ (objects: Array!, error: NSError!) -> Void in
             if error != nil {
                 // 検索失敗時の処理
                 print("GeoPointクラスの検索に失敗しました:\(error.code)")
@@ -161,9 +242,23 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 // 検索成功時の処理
                 print("GeoPointクラスの検索に成功しました")
                 self.label.text = "GeoPointクラスの検索に成功しました"
-                for geoPoint in objects {
-                    let point = geoPoint.objectForKey("geoPoint") as! NCMBGeoPoint
-                    self.addMarker(point.latitude, longitude: point.longitude, title: geoPoint.objectForKey("title") as! String, snippet: geoPoint.objectForKey("snippet") as! String, color: "blue")
+                for object in objects {
+                    let point = object.objectForKey("geolocation") as! NCMBGeoPoint
+                    self.addMarker(point.latitude, longitude: point.longitude, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: "blue")
+                }
+            }
+        })
+        queryShop.findObjectsInBackgroundWithBlock({ (objects: Array!, error: NSError!) -> Void in
+            if error != nil {
+                // 検索失敗時の処理
+                print("Shopクラスの検索に失敗しました:\(error.code)")
+                self.label.text = "Shopクラスの検索に失敗しました:\(error.code)"
+            } else {
+                // 検索成功時の処理
+                print("GeoPointクラスの検索に成功しました")
+                self.label.text = "GeoPointクラスの検索に成功しました"
+                for object in objects {
+                    self.addImageMarker(object.objectForKey("geolocation")!.latitude, longitude: object.objectForKey("geolocation")!.longitude, title: object.objectForKey("shopName") as! String, snippet: object.objectForKey("category") as! String, imageName: object.objectForKey("image") as! String)
                 }
             }
         })
@@ -175,13 +270,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         getShopData()
         // チェック
         if shopData == nil {
-            print("Shop情報が取得できていません")
-            label.text = "Shop情報が取得できていません"
+            print("Shop情報の取得に失敗しました")
+            label.text = "Shop情報の取得に失敗しました"
             
             return
         } else {
-            print("Shop情報が取得できました")
-            label.text = "Shop情報が取得できました"
+            print("Shop情報の取得に成功しました")
+            label.text = "Shop情報の取得に成功しました"
             
             // マーカーを設定
             for shop in shopData {

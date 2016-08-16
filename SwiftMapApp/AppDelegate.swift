@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  SwiftMapApp
 //
-//  Created by 大森太郎 on 2016/08/10.
+//  Created by Natsumo Ikeda on 2016/08/10.
 //  Copyright © 2016年 NIFTY Corporation. All rights reserved.
 //
 
