@@ -67,14 +67,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 位置情報許可状況確認メソッド
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
-            // 初回のみ許可要求
         case .NotDetermined:
+            // 初回のみ許可要求
             locationManager.requestWhenInUseAuthorization()
         case .Restricted, .Denied:
-            break
+            // 位置情報許可を依頼するアラートの表示
+            alertLocationServiceDisabled()
         case .AuthorizedAlways, .AuthorizedWhenInUse:
             break
         }
+    }
+    
+    // 位置情報許可依頼アラート
+    func alertLocationServiceDisabled() {
+        let alert = UIAlertController(title: "位置情報が許可されていません", message: "位置情報サービスを有効にしてください", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "設定", style: .Default, handler: { (action: UIAlertAction) -> Void in
+            let url = NSURL(string: UIApplicationOpenSettingsURLString)!
+            UIApplication.sharedApplication().openURL(url)
+        }))
+        alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: { (action: UIAlertAction) -> Void in
+        }))
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     // 位置情報が更新されるたびに呼ばれるメソッド
