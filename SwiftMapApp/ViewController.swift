@@ -38,7 +38,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // ズームレベル
     let ZOOM: Float = 14.5
     // 検索範囲
-    let SEAECH_RANGE = ["全件検索", "現在地から半径5km以内を検索", "現在地から半径1km以内を検索", "現在地から新宿駅と西新宿駅の間を検索"]
+    let SEAECH_RANGE = ["全件検索", "現在地から半径5km以内を検索", "現在地から半径1km以内を検索", "新宿駅と西新宿駅の間を検索"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -268,8 +268,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 self.label.text = "Shopクラスの検索に失敗しました:\(error.code)"
             } else {
                 // 検索成功時の処理
-                print("GeoPointクラスの検索に成功しました")
-                self.label.text = "GeoPointクラスの検索に成功しました"
+                print("Shopクラスの検索に成功しました")
+                self.label.text = "Shopクラスの検索に成功しました"
                 for object in objects {
                     self.addImageMarker(object.objectForKey("geolocation")!.latitude, longitude: object.objectForKey("geolocation")!.longitude, title: object.objectForKey("shopName") as! String, snippet: object.objectForKey("category") as! String, imageName: object.objectForKey("image") as! String)
                 }
