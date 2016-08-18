@@ -2,7 +2,7 @@
 ![画像001](/readme-img/001.png)
 
 ## 概要
-* [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)(通称mBaaS)の『位置情報検索』機能を利用して、「現在地情報（緯度経度）をクラウドに保存・地図に表示する」内容を実装したサンプルプロジェクトです
+* [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)(通称mBaaS)の『位置情報検索』機能を利用して、「現在地情報（緯度経度）をクラウドに保存する・保存したデータを取得して地図に表示する」内容を実装したサンプルプロジェクトです
 * 簡単な操作ですぐに [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)の機能を体験いただけます★☆
 
 ## ニフティクラウドmobile backendって何？？
@@ -60,7 +60,7 @@
 
 下記リンクをクリックしてサンプルプロジェクトをダウンロードします▼
 
-[__SwiftMapApp__](https://github.com/natsumo/SwiftMapApp/archive/master.zip)
+　　　　　[__SwiftMapApp__](https://github.com/natsumo/SwiftMapApp/archive/master.zip)
 
 * フォルダを確認します
 
@@ -208,7 +208,7 @@ $ pod install --no-repo-update
 
 * 保存に成功したら、[mBaaS](http://mb.cloud.nifty.com/)のダッシュボードから保存先の「データストア」を確認してみましょう！
 * 新しく「GeoPoint」クラスが作成され、その中にデータが保存されていることを確認できます
- * 下の例は、タイトルに「はじめて！」、コメントに「mBaaSに位置情報を登録」と入れた場合です
+ * 下の例は、タイトルに「和食」、コメントに「ワンコインで食べられる！」と入れた場合です
 
 ![画像019](/readme-img/019.png)
 
@@ -219,11 +219,43 @@ $ pod install --no-repo-update
 サンプルプロジェクトに実装済みの内容のご紹介
 
 ### mBaaSの初期設定
-* mBaaS の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/introduction/quickstart_ios.html)をSwift版に書き換えたドキュメントをご用意していますので、ご活用ください
- * [SwiftでmBaaSを始めよう！(＜CocoaPods＞でuse_framewoks!を有効にした方法)](http://qiita.com/natsumo/items/57d3a4d9be16b0490965)
- * [＜CocoaPods＞SwiftでmBaaSを始めよう！](http://qiita.com/natsumo/items/b2d18d87d57300c8d81c)
+* SDKの詳しい導入方法は、mBaaS の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/introduction/quickstart_ios.html)をSwift版に書き換えたドキュメントをご用意していますので、ご活用ください
 
-### 位置情報取得のための初期設定
+　　　　　__[【Swift版】ドキュメント（クイックスタート）](https://github.com/NIFTYCloud-mbaas/NCMB_SwiftQuickStart)__
+
+
+* SDKの読み込みは下記のコードで行っています
+```swift
+import NCMB
+```
+* SDKの初期化は下記のコードで行っています
+```swift
+// mBaaS APIkey
+let applicationkey = "YOUR_NCMB_APPLICATIONKEY"
+let clientkey = "YOUR_NCMB_CLIENTKEY"
+// mBaaS初期化
+NCMB.setApplicationKey(applicationkey, clientKey: clientkey)
+```
+※「`YOUR_APPLICATION_KEY`」と「`YOUR_CLIENT_KEY`」は、mBaaSのダッシュボードで発行したAPIキーに置き換えます
+
+### Google Map を表示するための初期設定
+
+* SDKの詳しい導入方法は、[Google Maps API](https://developers.google.com/maps/)のiOS向け（Maps SDK for iOS）__[スタートガイド](https://developers.google.com/maps/documentation/ios-sdk/start)__（日本語）をご活用ください
+
+* SDKの読み込みは下記のコードで行っています
+```swift
+import GoogleMaps
+```
+* SDKの初期化は下記のコードで行っています
+```swift
+// Google Maps APIkey
+let googleMapsAPIkey = "YOUR_GOOGLE_MAPS_APYKEY"
+// GoogleMaps初期化
+GMSServices.provideAPIKey(googleMapsAPIkey)
+```
+※「`YOUR_GOOGLE_MAPS_APYKEY`」は、Google Cloud Platformのダッシュボードで発行したAPIキーに置き換えます
+
+### 位置情報取得のための設定
 
 * `CoreLocation.framework`を追加をし、ViewcControllerで読み込みをしています
 
@@ -313,6 +345,7 @@ queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: shinjukuGeoPoin
 ```
 
 ## 参考
-* mBaaS(iOS)の[ドキュメント](http://mb.cloud.nifty.com/doc/current/#/iOS)をご参照ください
+* mBaaS(iOS)の[ドキュメント](http://mb.cloud.nifty.com/doc/current/#/iOS)
+* Google MAps for iOS の[ドキュメント](https://developers.google.com/maps/documentation/ios-sdk/start)
 * 同じ内容の【Objective-C】版もご用意しています
  * https://github.com/natsumo/ObjcMapApp
