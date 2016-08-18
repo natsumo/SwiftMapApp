@@ -1,0 +1,32 @@
+{
+	"results":[{
+		"geolocation":{"__type":"GeoPoint","longitude":139.687384,"latitude":35.695737},
+		"image":"curry.png",
+		"shopName":"ShopA",
+		"category":"カレー"
+	},
+	{
+		"geolocation":{"__type":"GeoPoint","longitude":139.705559,"latitude":35.696733},
+		"image":"hamburger.png",
+		"shopName":"ShopB",
+		"category":"ハンバーガー"
+	},
+	{
+		"geolocation":{"__type":"GeoPoint","longitude":139.695462,"latitude":35.687407},
+		"image":"sushi.png",
+		"shopName":"ShopC",
+		"category":"寿司"
+	},
+	{
+		"geolocation":{"__type":"GeoPoint","longitude":139.684026,"latitude":35.688499},
+		"image":"yakiniku.png",
+		"shopName":"ShopD",
+		"category":"焼き肉"
+	},
+	{
+		"geolocation":{"__type":"GeoPoint","longitude":139.693966,"latitude":35.694198},
+		"image":"ramen.png",
+		"shopName":"ShopE",
+		"category":"ラーメン"
+	}]
+}
