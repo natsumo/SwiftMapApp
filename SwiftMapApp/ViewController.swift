@@ -205,7 +205,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    /** 【mBaaS：データストア(位置情報)】「GeoPoint」クラスのデータを取得 **/
+    /** 【mBaaS：データストア(位置情報)】保存データの取得 **/
     func getLocaion(title: String) {
         // チェック
         if myLocation == nil {
