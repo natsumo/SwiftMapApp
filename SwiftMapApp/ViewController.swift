@@ -21,20 +21,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 現在地
     var myLocation: CLLocation!
     var locationManager: CLLocationManager!
-    // マーカー
-    var marker: GMSMarker!
     // mBaaSデータストア「Shop」クラスデータ格納用
     var shopData: Array<NCMBObject>!
     
     // 新宿駅の位置情報
-    let SHINJUKU_LAT = 35.690549
-    let SHINJUKU_LON = 139.699550
+    let SHINJUKU_LOCATION = NCMBGeoPoint(latitude: 35.690549, longitude: 139.699550)
     // 西新宿駅の位置情報
-    let WEST_SHINJUKU_LAT = 35.6945080
-    let WEST_SHINJUKU_LON = 139.692692
+    let WEST_SHINJUKU_LOCATION = NCMBGeoPoint(latitude: 35.6945080, longitude: 139.692692)
     // ニフティの位置情報
-    let NIFTY_LAT = 35.696144
-    let NIFTY_LON = 139.689485
+    let NIFTY_LOCATION = NCMBGeoPoint(latitude: 35.696144, longitude: 139.689485)
     // ズームレベル
     let ZOOM: Float = 14.5
     // 検索範囲
@@ -51,8 +46,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         // 起動時は新宿駅に設定
-        showMap(SHINJUKU_LAT, longitude: SHINJUKU_LON)
-        addMarker(SHINJUKU_LAT, longitude: SHINJUKU_LON, title: "新宿駅", snippet: "Shinjuku Station", color: UIColor.greenColor())
+        showMap(SHINJUKU_LOCATION)
+        addMarker(SHINJUKU_LOCATION, title: "新宿駅", snippet: "Shinjuku Station", color: UIColor.greenColor())
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -148,7 +143,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                         print("位置情報の保存に成功しました：[\(geoPoint.latitude), \(geoPoint.longitude)]")
                         self.label.text = "位置情報の保存に成功しました：[\(geoPoint.latitude), \(geoPoint.longitude)]"
                         // マーカーを設置
-                        self.addMarker(geoPoint.latitude, longitude: geoPoint.longitude, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
+                        self.addMarker(geoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
                     }
                 }
                 
@@ -197,10 +192,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
         // 現在地
         let geoPoint = NCMBGeoPoint(latitude: myLocation.coordinate.latitude, longitude: myLocation.coordinate.longitude)
-        // 新宿駅
-        let shinjukuGeoPoint = NCMBGeoPoint(latitude: SHINJUKU_LAT, longitude: SHINJUKU_LON)
-        // 西新宿駅
-        let westShinjukuGeoPoint = NCMBGeoPoint(latitude: WEST_SHINJUKU_LAT, longitude: WEST_SHINJUKU_LON)
         // それぞれのクラスの検索クエリを作成
         let queryGeoPoint = NCMBQuery(className: "GeoPoint")
         let queryShop = NCMBQuery(className: "Shop")
@@ -222,8 +213,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         case SEAECH_RANGE[3]:
             print(SEAECH_RANGE[3])
             // 新宿駅と西新宿駅の間(矩形検索)
-            queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: shinjukuGeoPoint, toNortheast: westShinjukuGeoPoint)
-            queryShop.whereKey("geolocation", withinGeoBoxFromSouthwest: shinjukuGeoPoint, toNortheast: westShinjukuGeoPoint)
+            queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU_LOCATION, toNortheast: WEST_SHINJUKU_LOCATION)
+            queryShop.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU_LOCATION, toNortheast: WEST_SHINJUKU_LOCATION)
         default:
             print("\(SEAECH_RANGE[0])(エラー)")
             break
@@ -239,8 +230,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 print("GeoPointクラスの検索に成功しました")
                 self.label.text = "GeoPointクラスの検索に成功しました"
                 for object in objects {
-                    let point = object.objectForKey("geolocation") as! NCMBGeoPoint
-                    self.addMarker(point.latitude, longitude: point.longitude, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
+                    self.addMarker(object.objectForKey("geolocation") as! NCMBGeoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
                 }
             }
         })
@@ -254,7 +244,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 print("Shopクラスの検索に成功しました")
                 self.label.text = "Shopクラスの検索に成功しました"
                 for object in objects {
-                    self.addImageMarker(object.objectForKey("geolocation")!.latitude, longitude: object.objectForKey("geolocation")!.longitude, title: object.objectForKey("shopName") as! String, snippet: object.objectForKey("category") as! String, imageName: object.objectForKey("image") as! String)
+                    self.addImageMarker(object.objectForKey("geolocation") as! NCMBGeoPoint, title: object.objectForKey("shopName") as! String, snippet: object.objectForKey("category") as! String, imageName: object.objectForKey("image") as! String)
                 }
             }
         })
@@ -276,7 +266,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             // マーカーを設定
             for shop in shopData {
-                addImageMarker(shop.objectForKey("geolocation").latitude, longitude: shop.objectForKey("geolocation").longitude, title: shop.objectForKey("shopName") as! String, snippet: shop.objectForKey("category") as! String, imageName: shop.objectForKey("image") as! String)
+                addImageMarker(shop.objectForKey("geolocation") as! NCMBGeoPoint, title: shop.objectForKey("shopName") as! String, snippet: shop.objectForKey("category") as! String, imageName: shop.objectForKey("image") as! String)
             }
         }
     }
@@ -302,13 +292,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 「nifty」ボタン押下時の処理
     @IBAction func showNifty(sender: UIBarButtonItem) {
         // マーカーを設定
-        addImageMarker(NIFTY_LAT, longitude: NIFTY_LON, title: "ニフティ株式会社", snippet: "NIFTY Corporation", imageName: "mBaaS.png")
+        addImageMarker(NIFTY_LOCATION, title: "ニフティ株式会社", snippet: "NIFTY Corporation", imageName: "mBaaS.png")
     }
     
     // 地図を表示
-    func showMap (latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+    func showMap (location: NCMBGeoPoint) {
         // cameraの作成と設定
-        let camera = GMSCameraPosition.cameraWithLatitude(latitude,longitude: longitude, zoom: ZOOM)
+        let camera = GMSCameraPosition.cameraWithLatitude(location.latitude, longitude: location.longitude, zoom: ZOOM)
         mapView.camera = camera
         // 現在地の有効化
         mapView.myLocationEnabled = true
@@ -316,54 +306,48 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         mapView.settings.myLocationButton = true
     }
     
-    // マーカー作成
-    func addMarker (latitude: CLLocationDegrees, longitude: CLLocationDegrees, title: String, snippet: String, color: UIColor) {
-        
-        marker = GMSMarker()
+    // マーカー
+    func addMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor?, imageName: String?) {
+        let marker = GMSMarker()
         // 位置情報
-        marker.position = CLLocationCoordinate2DMake(latitude, longitude)
+        marker.position = CLLocationCoordinate2DMake(location.latitude, location.longitude)
         // タイトル
         marker.title = title
         // コメント
         marker.snippet = snippet
         // アイコン
-        marker.icon = GMSMarker.markerImageWithColor(color)
+        if imageName != nil {
+            /** 【mBaaS：ファイルストア】アイコン画像データを取得 **/
+            // ファイル名を設定
+            let imageFile = NCMBFile.fileWithName(imageName, data: nil)
+            // ファイルを検索
+            imageFile.getDataInBackgroundWithBlock{ (data: NSData!, error: NSError!) -> Void in
+                if error != nil {
+                    // ファイル取得失敗時の処理
+                    print("\(snippet)icon画像の取得に失敗しました:\(error.code)")
+                } else {
+                    // ファイル取得成功時の処理
+                    print("\(snippet)icon画像の取得に成功しました")
+                    // 画像アイコン
+                    marker.icon = UIImage.init(data: data)
+                }
+            }
+        } else {
+            // アイコン
+            marker.icon = GMSMarker.markerImageWithColor(color)
+        }
         // マーカー表示時のアニメーションを設定
         marker.appearAnimation = kGMSMarkerAnimationPop
         // マーカーを表示するマップの設定
         marker.map = mapView
     }
-
+    // マーカー作成
+    func addMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor) {
+        addMarker(location, title: title, snippet: snippet, color: color, imageName: nil)
+    }
     // マーカー作成（画像アイコン）
-    func addImageMarker(latitude: CLLocationDegrees, longitude: CLLocationDegrees, title: String, snippet: String, imageName: String) {
-        let marker = GMSMarker()
-        // 位置情報
-        marker.position = CLLocationCoordinate2DMake(latitude, longitude)
-        // shopName
-        marker.title = title
-        // category
-        marker.snippet = snippet
-        
-        /** 【mBaaS：ファイルストア】アイコン画像データを取得 **/
-        // ファイル名を設定
-        let imageFile = NCMBFile.fileWithName(imageName, data: nil)
-        // ファイルを検索
-        imageFile.getDataInBackgroundWithBlock{ (data: NSData!, error: NSError!) -> Void in
-            if error != nil {
-                // ファイル取得失敗時の処理
-                print("\(snippet)icon画像の取得に失敗しました:\(error.code)")
-            } else {
-                // ファイル取得成功時の処理
-                print("\(snippet)icon画像の取得に成功しました")
-                // 画像アイコン
-                marker.icon = UIImage.init(data: data)
-            }
-        }
-        
-        // マーカー表示時のアニメーションを設定
-        marker.appearAnimation = kGMSMarkerAnimationPop
-        // マーカーを表示するマップの設定
-        marker.map = mapView
+    func addImageMarker(location: NCMBGeoPoint, title: String, snippet: String, imageName: String) {
+        addMarker(location, title: title, snippet: snippet, color: nil, imageName: imageName)
     }
     
     // 「ゴミ箱」ボタン押下時の処理
