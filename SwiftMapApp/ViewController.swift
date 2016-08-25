@@ -125,8 +125,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 // 入力値の取得
                 let title = alert.textFields![0].text
                 let snippet = alert.textFields![1].text
-                let lat = "".stringByAppendingFormat("%.6f", self.myLocation.coordinate.latitude)
-                let lon = "".stringByAppendingFormat("%.6f", self.myLocation.coordinate.longitude)
+                let lat = String(format:"%.6f", self.myLocation.coordinate.latitude)
+                let lon = String(format:"%.6f", self.myLocation.coordinate.longitude)
                 
                 /** 【mBaaS：データストア】位置情報の保存 **/
                  // NCMBGeoPointの生成
@@ -175,31 +175,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         // キャンセル
-        let cancel = UIAlertAction(title: "キャンセル", style: .Cancel) { (action: UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "キャンセル", style: .Cancel) { (action: UIAlertAction!) -> Void in
+            })
+        // 検索条件を設定
+        for i in 0..<SEAECH_RANGE.count {
+            actionSheet.addAction(UIAlertAction(title: SEAECH_RANGE[i], style: .Default) { (action: UIAlertAction!) -> Void in
+                self.getLocaion(action.title!)
+                })
         }
-        // 全件検索
-        let allSearch = UIAlertAction(title: SEAECH_RANGE[0], style: .Default) { (action: UIAlertAction!) -> Void in
-            self.getLocaion(action.title!)
-        }
-        // 円形検索(半径5km以内)
-        let round5km = UIAlertAction(title: SEAECH_RANGE[1], style: .Default) { (action: UIAlertAction) -> Void in
-            self.getLocaion(action.title!)
-        }
-        // 円形検索(半径1km以内)
-        let round1km = UIAlertAction(title: SEAECH_RANGE[2], style: .Default) { (action: UIAlertAction) -> Void in
-            self.getLocaion(action.title!)
-        }
-        // 矩形検索
-        let rectangle = UIAlertAction(title: SEAECH_RANGE[3], style: .Default) { (action: UIAlertAction) -> Void in
-            self.getLocaion(action.title!)
-        }
-        
-        // 設定
-        actionSheet.addAction(cancel)
-        actionSheet.addAction(allSearch)
-        actionSheet.addAction(round5km)
-        actionSheet.addAction(round1km)
-        actionSheet.addAction(rectangle)
         // アラートを表示する
         presentViewController(actionSheet, animated: true, completion: nil)
         
