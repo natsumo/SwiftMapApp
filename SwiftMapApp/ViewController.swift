@@ -91,12 +91,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     // 位置情報が更新されるたびに呼ばれるメソッド
-    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // 値をローカルに保存
-        myLocation = newLocation
+        myLocation = locations[0]
         // TextFieldに表示
-        self.latTextField.text = "".stringByAppendingFormat("%.6f", newLocation.coordinate.latitude)
-        self.lonTextField.text = "".stringByAppendingFormat("%.6f", newLocation.coordinate.longitude)
+        self.latTextField.text = String(format:"%.6f", self.myLocation.coordinate.latitude)
+        self.lonTextField.text = String(format:"%.6f", self.myLocation.coordinate.longitude)
         self.label.text = "右上の「保存」をタップしてmBaaSに保存しよう！"
     }
     
