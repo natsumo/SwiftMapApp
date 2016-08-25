@@ -316,10 +316,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // コメント
         marker.snippet = snippet
         // アイコン
-        if imageName != nil {
+        if let unwrappedImageName = imageName {
             /** 【mBaaS：ファイルストア】アイコン画像データを取得 **/
             // ファイル名を設定
-            let imageFile = NCMBFile.fileWithName(imageName, data: nil)
+            let imageFile = NCMBFile.fileWithName(unwrappedImageName, data: nil)
             // ファイルを検索
             imageFile.getDataInBackgroundWithBlock{ (data: NSData!, error: NSError!) -> Void in
                 if error != nil {
@@ -334,7 +334,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             }
         } else {
             // アイコン
-            marker.icon = GMSMarker.markerImageWithColor(color)
+            marker.icon = GMSMarker.markerImageWithColor(color!)
         }
         // マーカー表示時のアニメーションを設定
         marker.appearAnimation = kGMSMarkerAnimationPop
