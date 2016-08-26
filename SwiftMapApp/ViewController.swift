@@ -53,7 +53,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
         // 起動時は新宿駅に設定
         showMap(SHINJUKU.location)
-        addMarker(SHINJUKU.location, title: SHINJUKU.title, snippet: SHINJUKU.snippet, color: SHINJUKU.color)
+        addColorMarker(SHINJUKU.location, title: SHINJUKU.title, snippet: SHINJUKU.snippet, color: SHINJUKU.color)
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -148,10 +148,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                         print("位置情報の保存に成功しました：[\(geoPoint.latitude), \(geoPoint.longitude)]")
                         self.label.text = "位置情報の保存に成功しました：[\(geoPoint.latitude), \(geoPoint.longitude)]"
                         // マーカーを設置
-                        self.addMarker(geoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
+                        self.addColorMarker(geoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
                     }
                 }
-                
             })
             // アラートのキャンセル押下時の処理
             alert.addAction(UIAlertAction(title: "キャンセル", style: .Default) { (action: UIAlertAction!) -> Void in
@@ -235,7 +234,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 print("GeoPointクラスの検索に成功しました")
                 self.label.text = "GeoPointクラスの検索に成功しました"
                 for object in objects {
-                    self.addMarker(object.objectForKey("geolocation") as! NCMBGeoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
+                    self.addColorMarker(object.objectForKey("geolocation") as! NCMBGeoPoint, title: object.objectForKey("title") as! String, snippet: object.objectForKey("snippet") as! String, color: UIColor.blueColor())
                 }
             }
         })
@@ -327,18 +326,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                     // 画像アイコン
                     marker.icon = UIImage.init(data: data)
                 }
+                // マーカー表示時のアニメーションを設定
+                marker.appearAnimation = kGMSMarkerAnimationPop
+                // マーカーを表示するマップの設定
+                marker.map = self.mapView
             }
         } else if let unwrappedColor = color {
             // アイコン
             marker.icon = GMSMarker.markerImageWithColor(unwrappedColor)
+            // マーカー表示時のアニメーションを設定
+            marker.appearAnimation = kGMSMarkerAnimationPop
+            // マーカーを表示するマップの設定
+            marker.map = mapView
         }
-        // マーカー表示時のアニメーションを設定
-        marker.appearAnimation = kGMSMarkerAnimationPop
-        // マーカーを表示するマップの設定
-        marker.map = mapView
     }
     // マーカー作成 (カラーアイコン)
-    func addMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor) {
+    func addColorMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor) {
         addMarker(location, title: title, snippet: snippet, color: color, imageName: nil)
     }
     // マーカー作成（画像アイコン）
