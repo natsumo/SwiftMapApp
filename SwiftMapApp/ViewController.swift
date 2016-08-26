@@ -24,12 +24,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // mBaaSデータストア「Shop」クラスデータ格納用
     var shopData: Array<NCMBObject>!
     
-    // 新宿駅の位置情報
-    let SHINJUKU_LOCATION = NCMBGeoPoint(latitude: 35.690549, longitude: 139.699550)
+    // 新宿駅の情報
+    let SHINJUKU = (title:"新宿駅",
+                    snippet:"Shinjuku Station",
+                    location:NCMBGeoPoint(latitude: 35.690549, longitude: 139.699550), // 位置情報
+                    color:UIColor.greenColor()
+    )
+    // ニフティの情報
+    let NIFTY = (title:"ニフティ株式会社",
+                 snippet:"NIFTY Corporation",
+                 location:NCMBGeoPoint(latitude: 35.696144, longitude: 139.689485), // 位置情報
+                 imageName:"mBaaS.png"
+    )
     // 西新宿駅の位置情報
     let WEST_SHINJUKU_LOCATION = NCMBGeoPoint(latitude: 35.6945080, longitude: 139.692692)
-    // ニフティの位置情報
-    let NIFTY_LOCATION = NCMBGeoPoint(latitude: 35.696144, longitude: 139.689485)
     // ズームレベル
     let ZOOM: Float = 14.5
     // 検索範囲
@@ -46,8 +54,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         // 起動時は新宿駅に設定
-        showMap(SHINJUKU_LOCATION)
-        addMarker(SHINJUKU_LOCATION, title: "新宿駅", snippet: "Shinjuku Station", color: UIColor.greenColor())
+        showMap(SHINJUKU.location)
+        addMarker(SHINJUKU.location, title: SHINJUKU.title, snippet: SHINJUKU.snippet, color: SHINJUKU.color)
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -101,7 +109,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         if myLocation == nil {
             print("位置情報が取得できていません")
             label.text = "位置情報が取得できていません"
-            return
         } else {
             print("位置情報が取得できました")
             label.text = "位置情報が取得できました"
@@ -213,8 +220,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         case SEAECH_RANGE[3]:
             print(SEAECH_RANGE[3])
             // 新宿駅と西新宿駅の間(矩形検索)
-            queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU_LOCATION, toNortheast: WEST_SHINJUKU_LOCATION)
-            queryShop.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU_LOCATION, toNortheast: WEST_SHINJUKU_LOCATION)
+            queryGeoPoint.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU.location, toNortheast: WEST_SHINJUKU_LOCATION)
+            queryShop.whereKey("geolocation", withinGeoBoxFromSouthwest: SHINJUKU.location, toNortheast: WEST_SHINJUKU_LOCATION)
         default:
             print("\(SEAECH_RANGE[0])(エラー)")
             break
@@ -292,7 +299,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 「nifty」ボタン押下時の処理
     @IBAction func showNifty(sender: UIBarButtonItem) {
         // マーカーを設定
-        addImageMarker(NIFTY_LOCATION, title: "ニフティ株式会社", snippet: "NIFTY Corporation", imageName: "mBaaS.png")
+        addImageMarker(NIFTY.location, title: NIFTY.title, snippet: NIFTY.snippet, imageName: NIFTY.imageName)
     }
     
     // 地図を表示
@@ -306,7 +313,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         mapView.settings.myLocationButton = true
     }
     
-    // マーカー
+    // マーカー作成
     func addMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor?, imageName: String?) {
         let marker = GMSMarker()
         // 位置情報
@@ -332,16 +339,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                     marker.icon = UIImage.init(data: data)
                 }
             }
-        } else {
+        } else if let unwrappedColor = color {
             // アイコン
-            marker.icon = GMSMarker.markerImageWithColor(color!)
+            marker.icon = GMSMarker.markerImageWithColor(unwrappedColor)
         }
         // マーカー表示時のアニメーションを設定
         marker.appearAnimation = kGMSMarkerAnimationPop
         // マーカーを表示するマップの設定
         marker.map = mapView
     }
-    // マーカー作成
+    // マーカー作成 (カラーアイコン)
     func addMarker(location: NCMBGeoPoint, title: String, snippet: String, color: UIColor) {
         addMarker(location, title: title, snippet: snippet, color: color, imageName: nil)
     }
