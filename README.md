@@ -236,7 +236,7 @@ let clientkey = "YOUR_NCMB_CLIENTKEY"
 // mBaaS初期化
 NCMB.setApplicationKey(applicationkey, clientKey: clientkey)
 ```
-※「`YOUR_APPLICATION_KEY`」と「`YOUR_CLIENT_KEY`」は、mBaaSのダッシュボードで発行したAPIキーに置き換えます
+※「`YOUR_NCMB_APPLICATIONKEY`」と「`YOUR_NCMB_CLIENTKEY`」は、mBaaSのダッシュボードで発行したAPIキーに置き換えます
 
 ### Google Map を表示するための初期設定
 
@@ -249,11 +249,11 @@ import GoogleMaps
 * SDKの初期化は下記のコードで行っています
 ```swift
 // Google Maps APIkey
-let googleMapsAPIkey = "YOUR_GOOGLE_MAPS_APYKEY"
+let googleMapsAPIkey = "YOUR_GOOGLE_MAPS_APIKEY"
 // GoogleMaps初期化
 GMSServices.provideAPIKey(googleMapsAPIkey)
 ```
-※「`YOUR_GOOGLE_MAPS_APYKEY`」は、Google Cloud Platformのダッシュボードで発行したAPIキーに置き換えます
+※「`YOUR_GOOGLE_MAPS_APIKEY`」は、Google Cloud Platformのダッシュボードで発行したAPIキーに置き換えます
 
 ### 位置情報取得のための設定
 

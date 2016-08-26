@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let clientkey      = "YOUR_NCMB_CLIENTKEY"
 
     // Google Maps APIkey
-    let googleMapsAPIkey = "YOUR_GOOGLE_MAPS_APYKEY"
+    let googleMapsAPIkey = "YOUR_GOOGLE_MAPS_APIKEY"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // mBaaS初期化
