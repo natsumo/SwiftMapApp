@@ -9,6 +9,7 @@
 import UIKit
 import NCMB
 import GoogleMaps
+import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     // Google Map
@@ -184,7 +185,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         // アラートを表示する
         presentViewController(actionSheet, animated: true, completion: nil)
-        
     }
     
     /** 【mBaaS：データストア(位置情報)】保存データの取得 **/
