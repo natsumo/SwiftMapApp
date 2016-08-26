@@ -21,8 +21,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 現在地
     var myLocation: CLLocation!
     var locationManager: CLLocationManager!
-    // mBaaSデータストア「Shop」クラスデータ格納用
-    var shopData: Array<NCMBObject>!
     
     // 新宿駅の情報
     let SHINJUKU = (title:"新宿駅",
@@ -260,39 +258,30 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // 「お店（スプーンとフォーク）」ボタン押下時の処理
     @IBAction func showShops(sender: UIBarButtonItem) {
         // Shopデータの取得
-        getShopData()
-        // チェック
-        if shopData == nil {
-            print("Shop情報の取得に失敗しました")
-            label.text = "Shop情報の取得に失敗しました"
-            
-            return
-        } else {
-            print("Shop情報の取得に成功しました")
-            label.text = "Shop情報の取得に成功しました"
-            
-            // マーカーを設定
-            for shop in shopData {
-                addImageMarker(shop.objectForKey("geolocation") as! NCMBGeoPoint, title: shop.objectForKey("shopName") as! String, snippet: shop.objectForKey("category") as! String, imageName: shop.objectForKey("image") as! String)
+        getShopDataWithBlock({ (objects: Array!, error: NSError!) -> Void in
+            if error != nil {
+                // 検索失敗時の処理
+                print("Shop情報の取得に失敗しました:\(error.code)")
+                self.label.text = "Shop情報の取得に失敗しました"
+            } else {
+                // 検索成功時の処理
+                print("Shop情報の取得に成功しました")
+                self.label.text = "Shop情報の取得に成功しました"
+                // マーカーを設定
+                for shop in objects {
+                    self.addImageMarker(shop.objectForKey("geolocation") as! NCMBGeoPoint, title: shop.objectForKey("shopName") as! String, snippet: shop.objectForKey("category") as! String, imageName: shop.objectForKey("image") as! String)
+                }
             }
-        }
+        })
     }
     
     /** 【mBaaS：データストア】「Shop」クラスのデータを取得 **/
-    func getShopData() {
+    func getShopDataWithBlock(block: NCMBArrayResultBlock!) {
         // 「Shop」クラスの検索クエリを作成
         let query = NCMBQuery(className: "Shop")
         // データストアを検索
         query.findObjectsInBackgroundWithBlock({ (objects: Array!, error: NSError!) -> Void in
-            if error != nil {
-                // 検索失敗時の処理
-                print("Shopクラス検索に失敗しました:\(error.code)")
-            } else {
-                // 検索成功時の処理
-                print("Shopクラス検索に成功しました")
-                // AppDelegateに「Shop」クラスの情報を保持
-                self.shopData = objects as! Array
-            }
+            block(objects,error)
         })
     }
     
